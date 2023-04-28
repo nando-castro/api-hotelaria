@@ -9,3 +9,131 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Customer {
+  id            Int             @id @default(autoincrement())
+  email         String?         @unique
+  name          String
+  image         String?
+  phone         String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  Accommodation Accommodation[]
+
+  @@map("users")
+}
+
+model Room {
+  id            Int             @id @default(autoincrement())
+  name          String
+  image         String?
+  available     Boolean
+  price         Float
+  vacancy       Int
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  categoryId    Int
+  roomCategory  RoomCategory    @relation(fields: [categoryId], references: [id])
+  Accommodation Accommodation[]
+
+  @@map("quartos")
+}
+
+model RoomCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(50)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Room      Room[]
+
+  @@map("roomCategories")
+}
+
+model Products {
+  id                Int              @id @default(autoincrement())
+  name              String           @db.VarChar(50)
+  price             Float
+  image             String?
+  amount            Int
+  brand             String
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+  productCategoryId Int?
+  ProductCategory   ProductCategory? @relation(fields: [productCategoryId], references: [id])
+  Order             Order[]
+
+  @@map("products")
+}
+
+model ProductCategory {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(50)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Product   Products[]
+
+  @@map("productCategories")
+}
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  productId       Int
+  Product         Products      @relation(fields: [productId], references: [id])
+  amount          Int
+  AccommodationId Int
+  Accommodation   Accommodation @relation(fields: [AccommodationId], references: [id])
+
+  @@map("orders")
+}
+
+model Accommodation {
+  id         Int       @id @default(autoincrement())
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  customerId Int
+  Customer   Customer  @relation(fields: [customerId], references: [id])
+  roomId     Int
+  Room       Room      @relation(fields: [roomId], references: [id])
+  Order      Order[]
+  Payment    Payment[]
+
+  @@map("accommodations")
+}
+
+model Payment {
+  id              Int           @id @default(autoincrement())
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  amount          Float
+  paymentMethod   String
+  AccommodationId Int
+  Accommodation   Accommodation @relation(fields: [AccommodationId], references: [id])
+  paymentTypeId   Int
+  PaymentType     PaymentType   @relation(fields: [paymentTypeId], references: [id])
+  paymentFormId   Int
+  PaymentForm     PaymentForm   @relation(fields: [paymentFormId], references: [id])
+
+  @@map("payments")
+}
+
+model PaymentType {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Payment   Payment[]
+
+  @@map("paymentTypes")
+}
+
+model PaymentForm {
+  id        Int       @id @default(autoincrement())
+  name      String    @db.VarChar(50)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Payment   Payment[]
+
+  @@map("paymentForms")
+}
