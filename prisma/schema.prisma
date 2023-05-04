@@ -20,7 +20,7 @@ model Customer {
   updatedAt     DateTime        @updatedAt
   Accommodation Accommodation[]
 
-  @@map("users")
+  @@map("customers")
 }
 
 model Room {
