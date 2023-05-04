@@ -1,5 +1,5 @@
 import client from "../databases/database";
-import { TypeCustomer } from "../types/customersTypes";
+import { TypeCustomer } from "../types/customerTypes";
 
 export async function getCustomers() {
   return await client.customer.findMany();

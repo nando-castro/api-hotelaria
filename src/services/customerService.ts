@@ -1,6 +1,6 @@
 import { conflictError, notFoundError } from "./../utils/errorUtils";
 import * as customerRepository from "../repositories/customerRepository";
-import { TypeCustomer } from "../types/customersTypes";
+import { TypeCustomer } from "../types/customerTypes";
 
 export async function getCustomers() {
   return await customerRepository.getCustomers();
