@@ -27,3 +27,9 @@ export async function updateCustomer(id: number, data: TypeCustomer) {
 export async function deleteCustomer(id: number) {
   return await client.customer.delete({ where: { id } });
 }
+
+export async function getCustomerByCpf(cpf: string) {
+  return await client.customer.findFirst({
+    where: { cpf },
+  });
+}
